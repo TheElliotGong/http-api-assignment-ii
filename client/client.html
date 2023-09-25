@@ -5,7 +5,38 @@
   <link rel="stylesheet" type="text/css" href="/style.css">
   
   <script>
+    const addUser = async () => {
+      const name = document.getElementById('nameField').value;
+      const age = document.getElementById('ageField').value;
+      const response = await fetch('/addUser', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({name, age})
+      });
+      const json = await response.json();
+      console.log(json);
+    };
 
+    const getUser = () => {
+      
+    };
+    const init = () => {
+      //Attach event handler to button
+      const userForm = document.getElementById('userForm');
+      userForm.addEventListener("submit", event => {
+        event.preventDefault();
+        addUser();
+        return false;
+      });
+      const nameForm = document.getElementById('nameForm');
+      nameForm.addEventListener("submit", event => {
+        event.preventDefault();
+        return false;
+      });
+    };
+    window.onload = init;
   </script>
 </head>
 <body>
