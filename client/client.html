@@ -5,6 +5,29 @@
   <link rel="stylesheet" type="text/css" href="/style.css">
   
   <script>
+    const handleResponse = async (response) =>
+    {
+      const content = document.querySelector('#content');
+
+      switch(response.status)
+      {
+        case 200:
+          content.innerHTML = '<b>Success</b>';
+          break;
+        case 201:
+          content.innerHTML = '<b>User Created</b>';
+          break;
+        case 204:
+          content.innerHTML = '<b>User Updated</b>';
+          break;
+        case 404:
+          content.innerHTML = '<b>Not Found</b>';
+          break;
+        default: 
+          content.innerHTML = `Error code not implemented by client.`;
+          break;
+      }
+    }
     const addUser = async () => {
       const name = document.getElementById('nameField').value;
       const age = document.getElementById('ageField').value;
@@ -19,8 +42,15 @@
       console.log(json);
     };
 
-    const getUser = () => {
-      
+    const getUser = async () => {
+      const method = document.querySelector('#methodSelect').value;
+      const action = document.querySelector('#urlField').value;
+
+      const response = await fetch(action, {
+        method: method,
+        headers:  {
+          'Content-Type': 'application/json'}}
+      );
     };
     const init = () => {
       //Attach event handler to button
