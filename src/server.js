@@ -6,22 +6,6 @@ const responseHandler = require('./responses.js');
 
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
-const urlStruct = {
-  GET: {
-    '/': htmlHandler.getIndex,
-    '/style.css': htmlHandler.getCSS,
-    '/getUsers': responseHandler.getUsers,
-    '/notReal': responseHandler.notFound,
-    notFound: responseHandler.notFound,
-  },
-  HEAD: {
-    '/getUsers': responseHandler.getUsersMeta,
-    '/notReal': responseHandler.notFoundMeta,
-    notFound: responseHandler.notFoundMeta,
-  },
-  POST: { '/addUser': responseHandler.addUser },
-};
-
 const parseBody = (request, response, callback) => {
   const body = [];
 
@@ -31,8 +15,8 @@ const parseBody = (request, response, callback) => {
     response.end();
   });
 
-  request.on('data', (data) => {
-    body.push(data);
+  request.on('data', (chunk) => {
+    body.push(chunk);
   });
   request.on('end', () => {
     const bodyString = Buffer.concat(body).toString();
@@ -50,8 +34,7 @@ const handlePost = (request, response, parsedUrl) => {
 };
 
 const handleGet = (request, response, parseUrl) => {
-  switch(parseUrl.pathname) 
-  {
+  switch (parseUrl.pathname) {
     case '/':
       htmlHandler.getIndex(request, response);
       break;
@@ -71,30 +54,26 @@ const handleGet = (request, response, parseUrl) => {
 };
 
 const handleHead = (request, response, parseUrl) => {
-switch(parseUrl.pathname) 
-{
-  case '/getUsers':
-    responseHandler.getUsersMeta(request, response);
-    break;
-  case '/notReal':
-    responseHandler.notFoundMeta(request, response);
-    break;
-  default:
-    responseHandler.notFoundMeta(request, response);
-    break;
-}
-}
+  switch (parseUrl.pathname) {
+    case '/getUsers':
+      responseHandler.getUsersMeta(request, response);
+      break;
+    case '/notReal':
+      responseHandler.notFoundMeta(request, response);
+      break;
+    default:
+      responseHandler.notFoundMeta(request, response);
+      break;
+  }
+};
 const onRequest = (request, response) => {
   const parsedUrl = url.parse(request.url);
-  
-  console.log(request.method);
+
   if (request.method === 'POST') {
     handlePost(request, response, parsedUrl);
   } else if (request.method === 'GET') {
     handleGet(request, response, parsedUrl);
-  }
-  else if(request.method === 'HEAD')
-  {
+  } else if (request.method === 'HEAD') {
     handleHead(request, response, parsedUrl);
   }
 };

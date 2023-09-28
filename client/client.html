@@ -20,6 +20,9 @@
         case 204:
           content.innerHTML = '<b>User Updated</b>';
           break;
+        case 400:
+          content.innerHTML = '<b>Missing parameter(s)</b>';
+          break;
         case 404:
           content.innerHTML = '<b>Not Found</b>';
           break;
@@ -27,22 +30,37 @@
           content.innerHTML = `Error code not implemented by client.`;
           break;
       }
+      let obj = await response.json();
+      console.log(obj);
+      //If we have a message, display it.
+      if(obj.message){
+        content.innerHTML += `<p>Message: ${obj.message}</p>`;
+        if(obj.users)
+        {
+          content.innerHTML += `<p>Users: ${obj.users}</p>`;
+        }
+      }
+      
+
+
     }
     const addUser = async () => {
       const name = document.getElementById('nameField').value;
       const age = document.getElementById('ageField').value;
+
+      const formData = `name=${name}&age=${age}`;
+
       const response = await fetch('/addUser', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({name, age})
+        body: formData
       });
-      const json = await response.json();
-      console.log(json);
+      handleResponse(response);
     };
 
-    const getUser = async () => {
+    const request = async () => {
       const method = document.querySelector('#methodSelect').value;
       const action = document.querySelector('#urlField').value;
 
@@ -51,18 +69,22 @@
         headers:  {
           'Content-Type': 'application/json'}}
       );
+      handleResponse(response);
     };
     const init = () => {
       //Attach event handler to button
       const userForm = document.getElementById('userForm');
-      userForm.addEventListener("submit", event => {
+      const nameForm = document.getElementById('nameForm');
+
+      nameForm.addEventListener("submit", event => {
         event.preventDefault();
         addUser();
         return false;
       });
-      const nameForm = document.getElementById('nameForm');
-      nameForm.addEventListener("submit", event => {
+      
+      userForm.addEventListener("submit", event => {
         event.preventDefault();
+        request();
         return false;
       });
     };

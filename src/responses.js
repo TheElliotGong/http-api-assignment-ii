@@ -2,7 +2,7 @@ const users = {};
 
 const respondJSON = (request, response, status, content) => {
   response.writeHead(status, { 'Content-Type': 'application/json' });
-  response.write(content);
+  response.write(JSON.stringify(content));
   response.end();
 };
 
@@ -41,10 +41,8 @@ const addUser = (request, response, body) => {
   return respondJSONMeta(request, response, responseCode);
 };
 const getUsers = (request, response) => {
-  const responseJSON = {
-    users,
-  };
-  return respondJSON(request, response, 200, responseJSON);
+  const responseJSON = {users};
+  respondJSON(request, response, 200, responseJSON);
 };
 
 const getUsersMeta = (request, response) => {
