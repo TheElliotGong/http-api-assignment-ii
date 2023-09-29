@@ -5,7 +5,7 @@
   <link rel="stylesheet" type="text/css" href="/style.css">
   
   <script>
-    const handleResponse = async (response) =>
+    const handleResponse = async (response, method) =>
     {
       const content = document.querySelector('#content');
 
@@ -30,46 +30,52 @@
           content.innerHTML = `Error code not implemented by client.`;
           break;
       }
-      let obj = await response.json();
-      console.log(obj);
-      //If we have a message, display it.
-      if(obj.message){
-        content.innerHTML += `<p>Message: ${obj.message}</p>`;
+      
+      if(method === 'get' || method === 'post')
+      {
+        let obj = await response.json();
+        //console.log(obj);
+        let string = JSON.stringify(obj);
+        //If we have a message, display it.
+        if(obj.message)
+        {content.innerHTML += `<p>Message: ${JSON.stringify(obj.message)}</p>`;}    
         if(obj.users)
-        {
-          content.innerHTML += `<p>Users: ${obj.users}</p>`;
-        }
+        {content.innerHTML += `<p>Users: ${JSON.stringify(obj.users)}</p>`;}
       }
       
-
-
     }
+
     const addUser = async () => {
+      const nameForm = document.getElementById('nameForm');
+      
       const name = document.getElementById('nameField').value;
       const age = document.getElementById('ageField').value;
-
+      
+      const method = nameForm.getAttribute('method');
+      const action = nameForm.getAttribute('action');
+      
       const formData = `name=${name}&age=${age}`;
 
-      const response = await fetch('/addUser', {
-        method: 'POST',
+      const response = await fetch(action, {
+        method: method,
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Accept': 'application/json',
         },
         body: formData
       });
-      handleResponse(response);
+      
+      handleResponse(response, method);
     };
 
     const request = async () => {
       const method = document.querySelector('#methodSelect').value;
       const action = document.querySelector('#urlField').value;
-
       const response = await fetch(action, {
-        method: method,
+        method,
         headers:  {
-          'Content-Type': 'application/json'}}
-      );
-      handleResponse(response);
+          'Accept': 'application/json',}});
+      handleResponse(response, method);
     };
     const init = () => {
       //Attach event handler to button
