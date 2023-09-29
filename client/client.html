@@ -33,15 +33,15 @@
       
       if(method === 'get' || method === 'post')
       {
-        let obj = await response.json();
-        console.log(obj);
-        //If we have a message, display it.
-        if(obj.message)
-        {content.innerHTML += `<p>Message: ${JSON.stringify(obj.message)}</p>`;}   
+        
         if(response.status !== 204)
         {
+          let obj = await response.json();
+          //If we have a message, display it.
+          if(obj.message)
+          {content.innerHTML += `<p>Message: ${JSON.stringify(obj.message)}</p>`;}   
           if(obj.users)
-        {content.innerHTML += `<p>Users: ${JSON.stringify(obj.users)}</p>`;}
+          {content.innerHTML += `<p>Users: ${JSON.stringify(obj.users)}</p>`;}
         } 
         
       }
