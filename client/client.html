@@ -18,7 +18,7 @@
           content.innerHTML = '<b>User Created</b>';
           break;
         case 204:
-          content.innerHTML = '<b>User Updated</b>';
+          content.innerHTML = '<b>User Updated (No Content)</b>';
           break;
         case 400:
           content.innerHTML = '<b>Missing parameter(s)</b>';
@@ -34,13 +34,16 @@
       if(method === 'get' || method === 'post')
       {
         let obj = await response.json();
-        //console.log(obj);
-        let string = JSON.stringify(obj);
+        console.log(obj);
         //If we have a message, display it.
         if(obj.message)
-        {content.innerHTML += `<p>Message: ${JSON.stringify(obj.message)}</p>`;}    
-        if(obj.users)
+        {content.innerHTML += `<p>Message: ${JSON.stringify(obj.message)}</p>`;}   
+        if(response.status !== 204)
+        {
+          if(obj.users)
         {content.innerHTML += `<p>Users: ${JSON.stringify(obj.users)}</p>`;}
+        } 
+        
       }
       
     }
@@ -56,13 +59,13 @@
       
       const formData = `name=${name}&age=${age}`;
 
-      const response = await fetch(action, {
+      let response = await fetch(action, {
         method: method,
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
           'Accept': 'application/json',
         },
-        body: formData
+        body: formData,
       });
       
       handleResponse(response, method);
@@ -74,7 +77,8 @@
       const response = await fetch(action, {
         method,
         headers:  {
-          'Accept': 'application/json',}});
+          'Accept': 'application/json'}
+        });
       handleResponse(response, method);
     };
     const init = () => {

@@ -28,6 +28,7 @@ const addUser = (request, response, body) => {
     responseCode = 201;
     users[body.name] = {};
   }
+  //Update or add fields for this user
   users[body.name].name = body.name;
   users[body.name].age = body.age;
 
@@ -41,7 +42,7 @@ const addUser = (request, response, body) => {
   return respondJSONMeta(request, response, responseCode);
 };
 const getUsers = (request, response) => {
-  const responseJSON = {users};
+  const responseJSON = {users,};
   respondJSON(request, response, 200, responseJSON);
 };
 
