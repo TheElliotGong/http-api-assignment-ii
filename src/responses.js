@@ -4,12 +4,12 @@ Purpose: Create functions for GET, HEAD, and POST requests.
 Date 9/30/2023
 */
 
-//Variable to store user data
+// Variable to store user data
 const users = {};
 /**
  * This helper function returns given data in the desired format, used for get responses.
- * @param {*} request 
- * @param {*} response 
+ * @param {*} request
+ * @param {*} response
  * @param {*} status The http status code for this response
  * @param {*} content The data to return in the object.
  */
@@ -20,9 +20,9 @@ const respondJSON = (request, response, status, content) => {
 };
 /**
  * This helper function returns meta data in the desired format, used for head responses.
- * @param {*} request 
- * @param {*} response 
- * @param {*} status 
+ * @param {*} request
+ * @param {*} response
+ * @param {*} status
  */
 const respondJSONMeta = (request, response, status) => {
   response.writeHead(status, { 'Content-Type': 'application/json' });
@@ -30,18 +30,18 @@ const respondJSONMeta = (request, response, status) => {
 };
 /**
  * This function adds a user to the users object, or updates an existing user.
- * @param {*} request 
- * @param {*} response 
+ * @param {*} request
+ * @param {*} response
  * @param {*} body the data needed to add or update a user.
- * @returns 
+ * @returns
  */
 const addUser = (request, response, body) => {
   const responseJSON = {
     message: 'Name and age are both required.',
   };
-  //Check if data is valid.
+  // Check if data is valid.
   if (!body.name || !body.age) {
-    responseJSON.id = 'missingParams';
+    responseJSON.id = 'missingUserParams';
     return respondJSON(request, response, 400, responseJSON);
   }
   // Default status code for updating existing users
@@ -53,38 +53,38 @@ const addUser = (request, response, body) => {
     responseCode = 201;
     users[body.name] = {};
   }
-  //Update or add fields for this user
+  // Update or add fields for this user
   users[body.name].name = body.name;
   users[body.name].age = body.age;
-  //Response for when a user is created
+  // Response for when a user is created
   if (responseCode === 201) {
     responseJSON.message = 'Created Successfully';
     return respondJSON(request, response, responseCode, responseJSON);
   }
-  //Response for when a user is updated
+  // Response for when a user is updated
   return respondJSONMeta(request, response, responseCode);
 };
 /**
  * This function returns the saved list of users from the server.
- * @param {*} request 
- * @param {*} response 
+ * @param {*} request
+ * @param {*} response
  */
 const getUsers = (request, response) => {
-  const responseJSON = {users,};
+  const responseJSON = { users };
   respondJSON(request, response, 200, responseJSON);
 };
 /**
  * This function returns the meta data for the list of users from the server.
- * @param {*} request 
- * @param {*} response 
+ * @param {*} request
+ * @param {*} response
  */
 const getUsersMeta = (request, response) => {
   respondJSONMeta(request, response, 200);
 };
 /**
  * This function returns a not found error, complete with a message.
- * @param {*} request 
- * @param {*} response 
+ * @param {*} request
+ * @param {*} response
 
  */
 const notFound = (request, response) => {
@@ -97,13 +97,13 @@ const notFound = (request, response) => {
 };
 /**
  * This function returns the meta data for a not found error.
- * @param {*} request 
- * @param {*} response 
+ * @param {*} request
+ * @param {*} response
  */
 const notFoundMeta = (request, response) => {
   respondJSONMeta(request, response, 404);
 };
-//Export functions
+// Export functions
 module.exports = {
   respondJSON,
   respondJSONMeta,

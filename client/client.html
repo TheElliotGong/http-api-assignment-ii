@@ -38,14 +38,23 @@
           break;
       }
       //We'll only add extra content if we have a get/post response and the response isn't 204.
-      if(method === 'get' || method === 'post' && response.statuse !== 204)
+      if(method === 'get' || method === 'post' )
       {
-          let obj = await response.json();
-          //If we have a message, display it.
-          if(obj.message)
-          {content.innerHTML += `<p>Message: ${JSON.stringify(obj.message)}</p>`;}   
-          if(obj.users)
-          {content.innerHTML += `<p>Users: ${JSON.stringify(obj.users)}</p>`;}
+          if(response.status !== 204)
+          {
+            let obj = await response.json();
+            //If we have a message, display it.
+            if(obj.message)
+            {content.innerHTML += `<p>Message: ${JSON.stringify(obj.message)}`;
+             if(obj.id)
+             {content.innerHTML += `ID: ${JSON.stringify(obj.id)}`;}
+             content.innerHTML += `</p>`;
+            }
+            if(obj.users)
+            {content.innerHTML += `<p>Users: ${JSON.stringify(obj.users)}</p>`;}
+            console.log(JSON.stringify(obj));
+          }
+          
       }
     }
     //This function handles creating a new user to be added to the server.
