@@ -1,3 +1,10 @@
+/*
+Author: Elliot Gong
+Purpose: Create functions for GET, HEAD, and POST requests.
+Date 9/30/2023
+*/
+
+//Variable to store user data
 const users = {};
 /**
  * This helper function returns given data in the desired format, used for get responses.

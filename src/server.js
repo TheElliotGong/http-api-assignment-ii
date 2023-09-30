@@ -1,11 +1,22 @@
+/*
+Author: Elliot Gong
+Purpose: Handle server-side functions for responses.
+Date 9/30/2023
+*/
+
+//Constant variables
 const http = require('http');
 const url = require('url');
 const query = require('querystring');
 const htmlHandler = require('./htmlResponses.js');
 const responseHandler = require('./responses.js');
-
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
-
+/**
+ * This helper function helps parse
+ * @param {*} request 
+ * @param {*} response 
+ * @param {*} callback 
+ */
 const parseBody = (request, response, callback) => {
   const body = [];
 
@@ -27,12 +38,23 @@ const parseBody = (request, response, callback) => {
     callback(request, response, bodyParams);
   });
 };
+/**
+ * This function handles the post requests to the server.
+ * @param {*} request 
+ * @param {*} response 
+ * @param {*} parsedUrl = the url parsed by the url module
+ */
 const handlePost = (request, response, parsedUrl) => {
   if (parsedUrl.pathname === '/addUser') {
     parseBody(request, response, responseHandler.addUser);
   }
 };
-
+/**
+ * This function handles GET requests to the server.
+ * @param {*} request 
+ * @param {*} response 
+ * @param {*} parseUrl = the url parsed by the url module
+ */
 const handleGet = (request, response, parseUrl) => {
   switch (parseUrl.pathname) {
     case '/':
@@ -52,7 +74,12 @@ const handleGet = (request, response, parseUrl) => {
       break;
   }
 };
-
+/**
+ * This function handles HEAD requests to the server.
+ * @param {*} request 
+ * @param {*} response 
+ * @param {*} parseUrl = the url parsed by the url module
+ */
 const handleHead = (request, response, parseUrl) => {
   switch (parseUrl.pathname) {
     case '/getUsers':
@@ -66,6 +93,11 @@ const handleHead = (request, response, parseUrl) => {
       break;
   }
 };
+/**
+ * This function delegates requests to the appropriate handler functions.
+ * @param {*} request 
+ * @param {*} response 
+ */
 const onRequest = (request, response) => {
   const parsedUrl = url.parse(request.url);
 
