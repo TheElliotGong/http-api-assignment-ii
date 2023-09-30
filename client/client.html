@@ -5,10 +5,11 @@
   <link rel="stylesheet" type="text/css" href="/style.css">
   
   <script>
+    //This function handles the response from the server.
     const handleResponse = async (response, method) =>
     {
       const content = document.querySelector('#content');
-
+      //Write header content based on response status
       switch(response.status)
       {
         case 200:
@@ -30,25 +31,20 @@
           content.innerHTML = `Error code not implemented by client.`;
           break;
       }
-      
-      if(method === 'get' || method === 'post')
+      //We'll only add extra content if we have a get/post response and the response isn't 204.
+      if(method === 'get' || method === 'post' && response.statuse !== 204)
       {
-        
-        if(response.status !== 204)
-        {
           let obj = await response.json();
           //If we have a message, display it.
           if(obj.message)
           {content.innerHTML += `<p>Message: ${JSON.stringify(obj.message)}</p>`;}   
           if(obj.users)
           {content.innerHTML += `<p>Users: ${JSON.stringify(obj.users)}</p>`;}
-        } 
-        
       }
-      
     }
-
+    //This function handles creating a new user to be added to the server.
     const addUser = async () => {
+      //Get data from form elements.
       const nameForm = document.getElementById('nameForm');
       
       const name = document.getElementById('nameField').value;
@@ -58,7 +54,7 @@
       const action = nameForm.getAttribute('action');
       
       const formData = `name=${name}&age=${age}`;
-
+      //Send post request to server using data.
       let response = await fetch(action, {
         method: method,
         headers: {
@@ -70,8 +66,9 @@
       
       handleResponse(response, method);
     };
-
+    //This function is used when the user requests content from the server.
     const request = async () => {
+      //Get data from form elements and use it to construct a request.
       const method = document.querySelector('#methodSelect').value;
       const action = document.querySelector('#urlField').value;
       const response = await fetch(action, {
@@ -81,8 +78,9 @@
         });
       handleResponse(response, method);
     };
+    //Function to be called when the window loads.
     const init = () => {
-      //Attach event handler to button
+      //Attach event handlers to buttons
       const userForm = document.getElementById('userForm');
       const nameForm = document.getElementById('nameForm');
 
